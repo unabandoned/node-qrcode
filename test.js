@@ -10,8 +10,20 @@ const opt = {
   stdio: [process.stdin, process.stdout, process.stderr]
 }
 
-spawn('node', [
+// EXIT WITH TAP'S CODE, because this process is what `npm test` reports on.
+//
+// The spawn's result was dropped, so this wrapper always exited 0: tap could
+// fail every assertion in the suite and `npm test` still succeeded. That is a
+// green CI run that proves nothing, and it is the worst kind of test failure
+// because it is silent. Caught while adopting this package — four assertions
+// were failing and the suite was reporting success.
+const child = spawn('node', [
   'node_modules/.bin/tap',
   '--cov', '--100',
   process.argv[2] || 'test/**/*.test.js'
 ], opt)
+
+child.on('exit', function (code, signal) {
+  // A signal is a failure too, and has no exit code of its own to pass on.
+  process.exit(signal ? 1 : code)
+})

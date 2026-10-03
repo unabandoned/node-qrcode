@@ -141,3 +141,44 @@ test('PNG renderToFileStream', function (t) {
 
   t.end()
 })
+
+// THE TWO-ARGUMENT FORM, which nothing exercised. `renderToBuffer(qrData, cb)`
+// shifts its arguments when `options` is omitted, and that shift was the only
+// uncovered branch in this file — so the suite's own --100 gate was failing on
+// a path the public API documents.
+test('PNG renderToBuffer without options', function (t) {
+  const sampleQrData = QRCode.create('sample text', { version: 2 })
+
+  PngRenderer.renderToBuffer(sampleQrData, function (err, buffer) {
+    t.ok(!err, 'Should not generate errors with only qrData param')
+    t.ok(Buffer.isBuffer(buffer), 'Should return a buffer')
+    t.equal(buffer.subarray(1, 4).toString(), 'PNG', 'Should return PNG data')
+    t.end()
+  })
+})
+
+// THE ERROR PATH, which had no test and was broken because of it: the callback
+// was invoked and then execution continued into `output.toString()` on an
+// undefined output, raising a TypeError that replaced the real error and
+// calling back twice.
+test('PNG renderToDataURL error handling', function (t) {
+  const sampleQrData = QRCode.create('sample text', { version: 2 })
+  const expected = new Error('png encoding failed')
+  const stub = sinon.stub(PngRenderer, 'renderToBuffer').callsFake(function (qrData, options, cb) {
+    cb(expected)
+  })
+
+  let calls = 0
+  t.notThrow(function () {
+    PngRenderer.renderToDataURL(sampleQrData, function (err, url) {
+      calls++
+      t.equal(err, expected, 'Should pass the error through unchanged')
+      t.notOk(url, 'Should not produce a url')
+    })
+  }, 'Should not throw when the buffer render fails')
+
+  t.equal(calls, 1, 'Should call back exactly once')
+
+  stub.restore()
+  t.end()
+})

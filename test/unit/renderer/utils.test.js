@@ -114,9 +114,9 @@ test('Utils qrToImageData', function (t) {
   }
 
   const opts = {
-    margin: margin,
-    scale: scale,
-    color: color
+    margin,
+    scale,
+    color
   }
 
   let imageData = []

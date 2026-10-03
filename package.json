@@ -32,7 +32,8 @@
     "test": "node --throw-deprecation test.js",
     "build": "rollup -c",
     "browser": "node examples/clientsideserver.js",
-    "prepare": "git config core.hooksPath .githooks || true"
+    "prepare": "git config core.hooksPath .githooks || true",
+    "postbuild": "node scripts/verify-bundle.js"
   },
   "bin": {
     "qrcode": "./bin/qrcode"

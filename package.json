@@ -58,7 +58,7 @@
     "rollup": "2.80.0",
     "@rollup/plugin-babel": "7.1.0",
     "rollup-plugin-terser": "5.3.1",
-    "sinon": "9.2.4",
+    "sinon": "22.1.0",
     "standard": "16.0.4",
     "tap": "16.3.10"
   },

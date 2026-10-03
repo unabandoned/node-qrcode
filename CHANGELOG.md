@@ -4,6 +4,18 @@ fixing security vulnerabillities reported by users of snyk and `npm audit` major
 versions of deps were bumped and should only impact development of qrcode.
 
 
+## [1.6.1](https://github.com/unabandoned/node-qrcode/compare/qrcode-v1.6.0...qrcode-v1.6.1) (2026-10-03)
+
+
+### Bug Fixes
+
+* **deps:** update dependency pngjs to v7 ([#21](https://github.com/unabandoned/node-qrcode/issues/21)) ([91df10b](https://github.com/unabandoned/node-qrcode/commit/91df10bece8d18e519bb928a3cb0e98ff857c86a))
+* drop browserify and colors, which nothing uses ([#26](https://github.com/unabandoned/node-qrcode/issues/26)) ([f0473b0](https://github.com/unabandoned/node-qrcode/commit/f0473b09e448fa954fd1c2bb55bb92c4667486c7))
+* lint with eslint's own stack, dropping the abandoned standard ([#29](https://github.com/unabandoned/node-qrcode/issues/29)) ([396a82d](https://github.com/unabandoned/node-qrcode/commit/396a82dd1d960475ad6648d8f3b39eb8a7ecfce0))
+* repair the browser build, which could not run at all ([#23](https://github.com/unabandoned/node-qrcode/issues/23)) ([f9969bd](https://github.com/unabandoned/node-qrcode/commit/f9969bd44a97a1c8d75e2834bc630cce9bd6d092))
+* replace the abandoned standard with neostandard ([#27](https://github.com/unabandoned/node-qrcode/issues/27)) ([782d723](https://github.com/unabandoned/node-qrcode/commit/782d7234c2ce6e694925284e362baa63c0032ef6))
+* stop the toFile tests racing each other over one file ([#30](https://github.com/unabandoned/node-qrcode/issues/30)) ([6026dc0](https://github.com/unabandoned/node-qrcode/commit/6026dc0f03173c50f38c513060b08838c9c2cecd))
+
 ## [1.6.0](https://github.com/unabandoned/node-qrcode/compare/qrcode-v1.5.4...qrcode-v1.6.0) (2026-10-03)
 
 

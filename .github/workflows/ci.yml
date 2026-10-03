@@ -10,4 +10,8 @@ jobs:
     uses: unabandoned/.github/.github/workflows/reusable-ci.yml@3259184528f6d99057e8f6e204790cf04b5efc2f # v1.2.1
     with:
       node-versions: '[22, 24]'
-      has-build: false
+      # `build/` ships in package.json#files and the publish job builds it, so a
+      # broken build used to surface only at publish time — which is how a
+      # package rename in a dependency (rollup-plugin-babel -> @rollup/plugin-babel)
+      # sat on master with `npm run build` failing outright.
+      has-build: true

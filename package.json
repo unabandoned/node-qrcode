@@ -1,11 +1,11 @@
 {
   "name": "@unabandoned/qrcode",
   "description": "QRCode / 2d Barcode api with both server side and client side support using canvas",
-  "version": "1.5.4",
+  "version": "1.6.0",
   "author": "Ryan Day <soldair@gmail.com>",
   "contributors": [
     "Vincenzo Greco <greco.vincenzo@gmail.com>",
-    "Linus Unneb\u00e4ck <linus@folkdatorn.se>"
+    "Linus Unnebäck <linus@folkdatorn.se>"
   ],
   "keywords": [
     "qr",

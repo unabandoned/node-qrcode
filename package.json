@@ -28,7 +28,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "standard",
-    "pretest": "npm run lint",
+    "pretest": "npm run lint && tap build",
     "test": "node --throw-deprecation test.js",
     "build": "rollup -c",
     "browser": "node examples/clientsideserver.js",
@@ -82,5 +82,10 @@
   "publishConfig": {
     "access": "public",
     "provenance": true
+  },
+  "tap": {
+    "plugin": [
+      "!@tapjs/typescript"
+    ]
   }
 }

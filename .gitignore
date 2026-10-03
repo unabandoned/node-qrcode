@@ -2,5 +2,6 @@
 node_modules
 coverage
 .nyc_output
+.tap
 build
 package-lock.json

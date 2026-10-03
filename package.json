@@ -56,7 +56,7 @@
     "colors": "1.4.0",
     "express": "5.2.1",
     "htmlparser2": "12.0.0",
-    "rollup": "2.80.0",
+    "rollup": "4.63.5",
     "@rollup/plugin-babel": "7.1.0",
     "rollup-plugin-terser": "7.0.2",
     "sinon": "22.1.0",

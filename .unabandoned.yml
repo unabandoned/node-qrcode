@@ -1,0 +1,27 @@
+schema: 1
+
+package: "@unabandoned/qrcode"
+
+upstream:
+  repo: soldair/node-qrcode
+  reason: "unmaintained upstream — last release August 2024, and its dev tree no longer installs on a current Node"
+
+summary: >-
+  QR code generator for node and the browser, rendering to PNG, SVG, a canvas,
+  a data URL or a terminal.
+
+why-forked: >-
+  it-tools reaches it from two tools, so it ships in the bundle. Upstream went
+  idle while its tree aged — and the rot had already arrived: canvas@2.8.0 has
+  no prebuilt binary for Node 22 and cannot build from source, so the test
+  suite could not be installed at all, let alone run.
+
+used-by:
+  - consumer: "it-tools"
+    purpose: >-
+      backs the QR code generator and the wifi QR code generator, via
+      QRCode.toDataURL in the browser build
+
+status: active
+
+tags: [qrcode, qr, png, svg, canvas, browser]

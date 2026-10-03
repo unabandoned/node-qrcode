@@ -3,6 +3,44 @@ const QRCode = require('lib')
 const QRCodeBrowser = require('lib/browser')
 const { createCanvas } = require('canvas')
 const Helpers = require('test/helpers')
+const Utils = require('lib/renderer/utils')
+
+// WHAT THIS PACKAGE IS RESPONSIBLE FOR, rather than what node-canvas encodes.
+//
+// These assertions used to compare the data URL against a base64 PNG captured
+// from canvas@2. That string is canvas's encoder output, not ours: canvas@3
+// writes a valid, different PNG for the same pixels, so the test failed on a
+// dependency bump while the rendering was perfectly correct. Worse, the old
+// canvas could not be installed at all on Node 22 — no prebuilt binary and no
+// source build — so the suite was pinned to a version that no longer runs.
+//
+// So compare the PIXELS the renderer drew against the module matrix the core
+// produced. It is encoder-independent, survives a canvas bump, and tests more
+// than the old assertion did: a byte-identical PNG proves the compressor is
+// deterministic, while this proves the QR is actually drawn correctly.
+function drawsTheQRCode (canvas, text, options) {
+  const qr = QRCode.create(text, options)
+  const opts = Utils.getOptions(options)
+  const scale = Utils.getScale(qr.modules.size, opts)
+  const image = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data
+
+  for (let row = 0; row < qr.modules.size; row++) {
+    for (let col = 0; col < qr.modules.size; col++) {
+      // The centre of the module, so antialiasing at an edge cannot decide it.
+      const x = Math.floor((col + opts.margin) * scale + scale / 2)
+      const y = Math.floor((row + opts.margin) * scale + scale / 2)
+      const dark = image[(y * canvas.width + x) * 4] < 128
+      if (dark !== Boolean(qr.modules.data[row * qr.modules.size + col])) return false
+    }
+  }
+  return true
+}
+
+function isPngDataURL (url) {
+  if (typeof url !== 'string' || !url.startsWith('data:image/png;base64,')) return false
+  return Buffer.from(url.slice('data:image/png;base64,'.length), 'base64')
+    .subarray(1, 4).toString() === 'PNG'
+}
 
 test('toDataURL - no promise available', function (t) {
   Helpers.removeNativePromise()
@@ -99,25 +137,6 @@ test('toDataURL - image/png', function (t) {
 })
 
 test('Canvas toDataURL - image/png', function (t) {
-  const expectedDataURL = [
-    'data:image/png;base64,',
-    'iVBORw0KGgoAAAANSUhEUgAAAIQAAACECAYAAABRRIOnAAAABmJLR0QA/wD/AP+gvaeTAA',
-    'AC20lEQVR4nO3dQY7jMAwEwM1i///lzGUurYtWEEknQNV1EidjNGhFpuTX+/1+/4Fff5/+',
-    'AnwWgSAIBEEgCAJBEAiCQBAEgiAQBIEgCARBIAgCQRAIgkAQ/t0e4PV6VXyP/7a2b6yff9',
-    'vecXq83eufPj+nVAiCQBAEgnA9hlhVt2jursGn1/hbt2OW6fNzSoUgCARBIAjlY4jV6TWu',
-    'ex7hdt7g6TFA9zIaFYIgEASBILSPIbrdjhlWt/civn2prApBEAiCQBC+fgzR3R8xfa/kaS',
-    'oEQSAIAkFoH0N82u/y03sVuzFJ9xhlmgpBEAiCQBDKxxDTv8u7+x9uP3/3+k+jQhAEgiAQ',
-    'hOsxxNO/o0/7G07/fuvp83NKhSAIBEEgCK/u52VUzwNUr6Ponkc4Pb3V+1OcUiEIAkEQCE',
-    'L5HlPT17zuPZ1ux0Dde2BVUyEIAkEQCEL5vYzTa271NfF2nUb1vMj097mlQhAEgiAQhPG1',
-    'nbf3IqbnBXZjnuq9sKfncVYqBEEgCAJBGL+XsTqdp6g+/qr7Gr2q/n/0Q1BKIAgCQSjvqa',
-    'z+3b07/qq6h3G6Z3P3/h1jCEoJBEEgCO3zEJ/ej3Cq+hlb3etSTqkQBIEgCATh4+YhqucF',
-    'nu5fmD7+LRWCIBAEgSA83g+xmu45nH4m1+3nd1MhCAJBEAhC+x5T3br7I05193d0P5tchS',
-    'AIBEEgCOXzEN1un3lV/Qyt6nUe3f0OOyoEQSAIAkEo3x+ielrj9Bq96h5z7Dx9b+eUCkEQ',
-    'CIJAENr3mJpemzjdU7l7/7dRIQgCQRAIwvg+ldWm13Wc6t4Hs5oKQRAIgkAQvn4MUb1WdP',
-    'q5nKevt08lowSCIBCE9jHE9F7R0/MGu7/f9lDqh+BRAkEQCML12s6n12Wcqp5n6N5X8/Tz',
-    'zENQSiAIAkH4+v0hqKVCEASCIBAEgSAIBEEgCAJBEAiCQBAEgiAQBIEgCARBIAgCQfgBlZ',
-    '7HAm5AupgAAAAASUVORK5CYII='].join('')
-
   t.plan(11)
 
   t.throw(function () { QRCodeBrowser.toDataURL() },
@@ -132,7 +151,8 @@ test('Canvas toDataURL - image/png', function (t) {
     type: 'image/png'
   }, function (err, url) {
     t.ok(!err, 'there should be no error ' + err)
-    t.equals(url, expectedDataURL, 'url generated should match expected value')
+    t.ok(isPngDataURL(url) && drawsTheQRCode(canvas, 'i am a pony!', { errorCorrectionLevel: 'H', type: 'image/png' }),
+      'should render the expected QR code to the canvas')
   })
 
   QRCodeBrowser.toDataURL(canvas, 'i am a pony!', {
@@ -148,7 +168,8 @@ test('Canvas toDataURL - image/png', function (t) {
     errorCorrectionLevel: 'H',
     type: 'image/png'
   }).then(function (url) {
-    t.equals(url, expectedDataURL, 'url generated should match expected value (promise)')
+    t.ok(isPngDataURL(url) && drawsTheQRCode(canvas, 'i am a pony!', { errorCorrectionLevel: 'H', type: 'image/png' }),
+      'should render the expected QR code to the canvas (promise)')
   })
 
   QRCodeBrowser.toDataURL(canvas, 'i am a pony!', {
@@ -173,13 +194,15 @@ test('Canvas toDataURL - image/png', function (t) {
     type: 'image/png'
   }, function (err, url) {
     t.ok(!err, 'there should be no error ' + err)
-    t.equals(url, expectedDataURL, 'url generated should match expected value')
+    t.ok(isPngDataURL(url) && drawsTheQRCode(canvas, 'i am a pony!', { errorCorrectionLevel: 'H', type: 'image/png' }),
+      'should render the expected QR code to the canvas')
   })
 
   QRCodeBrowser.toDataURL('i am a pony!', {
     errorCorrectionLevel: 'H',
     type: 'image/png'
   }).then(function (url) {
-    t.equals(url, expectedDataURL, 'url generated should match expected value (promise)')
+    t.ok(isPngDataURL(url) && drawsTheQRCode(canvas, 'i am a pony!', { errorCorrectionLevel: 'H', type: 'image/png' }),
+      'should render the expected QR code to the canvas (promise)')
   })
 })

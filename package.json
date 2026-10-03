@@ -1,11 +1,11 @@
 {
-  "name": "qrcode",
+  "name": "@unabandoned/qrcode",
   "description": "QRCode / 2d Barcode api with both server side and client side support using canvas",
   "version": "1.5.4",
   "author": "Ryan Day <soldair@gmail.com>",
   "contributors": [
     "Vincenzo Greco <greco.vincenzo@gmail.com>",
-    "Linus Unnebäck <linus@folkdatorn.se>"
+    "Linus Unneb\u00e4ck <linus@folkdatorn.se>"
   ],
   "keywords": [
     "qr",
@@ -24,15 +24,15 @@
     "lib",
     "helper"
   ],
-  "homepage": "http://github.com/soldair/node-qrcode",
+  "homepage": "https://github.com/unabandoned/node-qrcode#readme",
   "license": "MIT",
   "scripts": {
     "lint": "standard",
     "pretest": "npm run lint",
     "test": "node --throw-deprecation test.js",
     "build": "rollup -c",
-    "prepublish": "npm run build",
-    "browser": "node examples/clientsideserver.js"
+    "browser": "node examples/clientsideserver.js",
+    "prepare": "git config core.hooksPath .githooks || true"
   },
   "bin": {
     "qrcode": "./bin/qrcode"
@@ -40,15 +40,17 @@
   "dependencies": {
     "dijkstrajs": "^1.0.1",
     "pngjs": "^5.0.0",
-    "yargs": "^15.3.1"
+    "yargs": "^18.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
+    "@commitlint/cli": "21.2.2",
+    "@commitlint/config-conventional": "21.2.2",
     "@rollup/plugin-commonjs": "^11.1.0",
     "@rollup/plugin-node-resolve": "^7.1.3",
     "browserify": "^16.5.1",
-    "canvas": "^2.8.0",
+    "canvas": "^3.2.3",
     "canvasutil": "0.0.4",
     "colors": "^1.4.0",
     "express": "^4.17.1",
@@ -62,10 +64,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/soldair/node-qrcode.git"
+    "url": "git+https://github.com/unabandoned/node-qrcode.git"
   },
   "engines": {
-    "node": ">=10.13.0"
+    "node": ">=22.12"
   },
   "standard": {
     "ignore": [
@@ -73,5 +75,12 @@
       "examples/vendors/",
       "lib/core/regex.js"
     ]
+  },
+  "bugs": {
+    "url": "https://github.com/unabandoned/node-qrcode/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   }
 }

@@ -259,3 +259,17 @@ test('toString byte-input', function (t) {
     t.equal(code, expectedOutput, 'should output the correct code')
   })
 })
+
+// A NULL OPTIONS ARGUMENT, which reaches lib/server.js's `params.opts ? ... :
+// undefined` falsy branch. checkParams only substitutes `{}` when the callback
+// is missing or is not a function, so `toString(text, null, cb)` passes null
+// straight through — the one call shape that exercised this, and the last
+// branch the suite's own --100 gate was missing.
+test('toString with null options', function (t) {
+  t.plan(2)
+
+  QRCode.toString('i am a pony!', null, function (err, str) {
+    t.ok(!err, 'there should be no error ' + err)
+    t.ok(str.length > 0, 'Should return a non-empty string')
+  })
+})

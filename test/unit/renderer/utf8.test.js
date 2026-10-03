@@ -67,3 +67,20 @@ test('Utf8 renderToFile', function (t) {
 
   fsStub.restore()
 })
+
+// THE INVERTED BLOCKS, which nothing exercised. A white foreground or a black
+// background flips the block characters, and that branch was the only
+// uncovered line in this file.
+test('Utf8Renderer render with inverted colors', function (t) {
+  const sampleQrData = QRCode.create('sample text', { version: 2 })
+
+  const whiteOnDefault = Utf8Renderer.render(sampleQrData, { color: { dark: '#ffffff' } })
+  const defaultOnBlack = Utf8Renderer.render(sampleQrData, { color: { light: '#000000' } })
+  const normal = Utf8Renderer.render(sampleQrData)
+
+  t.not(whiteOnDefault, normal, 'A white foreground should invert the blocks')
+  t.not(defaultOnBlack, normal, 'A black background should invert the blocks')
+  t.equal(whiteOnDefault, defaultOnBlack, 'Both inversions should render the same')
+
+  t.end()
+})

@@ -17,9 +17,12 @@ const opt = {
 // green CI run that proves nothing, and it is the worst kind of test failure
 // because it is silent. Caught while adopting this package — four assertions
 // were failing and the suite was reporting success.
+//
+// No coverage flags: tap enforces full coverage by default from 18 onwards, so
+// `--cov --100` became an unknown-option error rather than a no-op. Opting out
+// would now take `--allow-incomplete-coverage`, which is the point.
 const child = spawn('node', [
   'node_modules/.bin/tap',
-  '--cov', '--100',
   process.argv[2] || 'test/**/*.test.js'
 ], opt)
 

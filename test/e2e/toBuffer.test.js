@@ -7,7 +7,7 @@ const QRCode = require('lib')
 test('toBuffer', function (t) {
   t.plan(7)
 
-  t.throw(function () { QRCode.toBuffer() },
+  t.throws(function () { QRCode.toBuffer() },
     'Should throw if no arguments are provided')
 
   QRCode.toBuffer('i am a pony!', function (err, buffer) {

@@ -27,7 +27,7 @@
   "homepage": "https://github.com/unabandoned/node-qrcode#readme",
   "license": "MIT",
   "scripts": {
-    "lint": "standard",
+    "lint": "eslint",
     "pretest": "npm run lint && tap build",
     "test": "node --throw-deprecation test.js",
     "build": "rollup -c",
@@ -54,11 +54,12 @@
     "@rollup/plugin-terser": "1.0.0",
     "canvas": "3.2.3",
     "canvasutil": "0.0.4",
+    "eslint": "9.39.5",
     "express": "5.2.1",
     "htmlparser2": "12.0.0",
+    "neostandard": "0.13.0",
     "rollup": "4.63.5",
     "sinon": "22.1.0",
-    "standard": "17.1.2",
     "tap": "21.8.0"
   },
   "repository": {

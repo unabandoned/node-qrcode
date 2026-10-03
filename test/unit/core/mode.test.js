@@ -59,7 +59,7 @@ test('Char count bits', function (t) {
 })
 
 test('Best mode', function (t) {
-  /* eslint-disable quote-props */
+  /* eslint-disable @stylistic/quote-props -- the keys of this table are quoted uniformly on purpose */
   const EXPECTED_MODE = {
     '12345': Mode.NUMERIC,
     'abcde': Mode.BYTE,

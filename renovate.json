@@ -1,5 +1,24 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>unabandoned/renovate-config"],
-  "forkProcessing": "enabled"
+  "forkProcessing": "enabled",
+  "packageRules": [
+    {
+      "description": [
+        "Hold Babel at 7 until @rollup/plugin-babel can take Babel 8.",
+        "",
+        "The plugin peers @babel/core ^7.0.0 and no published version says otherwise,",
+        "so @babel/core@8 cannot be installed at all:",
+        "",
+        "  npm error peer @babel/core@\"^7.0.0\" from @rollup/plugin-babel@7.1.0",
+        "",
+        "Without this the major is reproposed on every run and sits red, which teaches",
+        "us to ignore red. Remove this rule when @rollup/plugin-babel publishes a",
+        "version that peers Babel 8 — Renovate will offer the major again by itself."
+      ],
+      "matchDatasources": ["npm"],
+      "matchPackageNames": ["@babel/core", "@babel/preset-env"],
+      "allowedVersions": "<8"
+    }
+  ]
 }

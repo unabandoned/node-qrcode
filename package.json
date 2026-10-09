@@ -29,7 +29,7 @@
   "scripts": {
     "lint": "eslint",
     "pretest": "npm run lint && tap build",
-    "test": "node --throw-deprecation test.js",
+    "test": "node --throw-deprecation test.js && node --test test/bin/qrcode.js",
     "build": "rollup -c",
     "browser": "node examples/clientsideserver.js",
     "prepare": "git config core.hooksPath .githooks || true",
@@ -40,8 +40,7 @@
   },
   "dependencies": {
     "dijkstrajs": "^1.0.1",
-    "pngjs": "^7.0.0",
-    "yargs": "^18.2.0"
+    "pngjs": "^7.0.0"
   },
   "devDependencies": {
     "@babel/core": "7.29.7",

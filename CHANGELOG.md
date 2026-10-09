@@ -4,6 +4,13 @@ fixing security vulnerabillities reported by users of snyk and `npm audit` major
 versions of deps were bumped and should only impact development of qrcode.
 
 
+## [1.6.2](https://github.com/unabandoned/node-qrcode/compare/qrcode-v1.6.1...qrcode-v1.6.2) (2026-10-09)
+
+
+### Bug Fixes
+
+* parse CLI arguments with node:util instead of yargs ([#33](https://github.com/unabandoned/node-qrcode/issues/33)) ([2d697fe](https://github.com/unabandoned/node-qrcode/commit/2d697fe2af21e9ae0ffed1682d4d19a2fb28b498))
+
 ## [1.6.1](https://github.com/unabandoned/node-qrcode/compare/qrcode-v1.6.0...qrcode-v1.6.1) (2026-10-03)
 
 

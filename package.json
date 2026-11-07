@@ -61,7 +61,7 @@
     "htmlparser2": "12.0.0",
     "rollup": "4.67.4",
     "sinon": "22.1.0",
-    "tap": "21.8.0"
+    "tap": "21.8.1"
   },
   "repository": {
     "type": "git",
